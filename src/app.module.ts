@@ -9,6 +9,8 @@ import { ClientModule } from "./client/client.module";
 import { Client } from "./client/entities/client.entity";
 import { DeviceModule } from "./device/device.module";
 import { Device } from "./device/entities/device.entity";
+import { ProgramModule } from "./program/program.module";
+import { Program } from "./program/entities/program.entity";
 
 @Module({
   imports: [
@@ -25,11 +27,12 @@ import { Device } from "./device/entities/device.entity";
       },
       logging: process.env.NODE_ENV != "production" ? true : false,
       synchronize: process.env.NODE_ENV != "production" ? true : false,
-      entities: [Admin, Client, Device],
+      entities: [Admin, Client, Device, Program],
     }),
     AdminModule,
     ClientModule,
     DeviceModule,
+    ProgramModule,
   ],
   controllers: [AppController],
   providers: [AppService],

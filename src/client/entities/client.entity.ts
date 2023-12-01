@@ -1,4 +1,5 @@
 import { Device } from "src/device/entities/device.entity";
+import { Program } from "src/program/entities/program.entity";
 import {
   CreateDateColumn,
   Entity,
@@ -14,12 +15,6 @@ export class Client {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @OneToMany(() => Device, (device) => device.Client, {
-    nullable: true,
-    cascade: true,
-  })
-  Devices: Device[];
-
   @Column({ unique: true })
   @Index()
   email: string;
@@ -28,7 +23,7 @@ export class Client {
   password: string;
 
   @Column()
-  Store_Name: string;
+  StoreName: string;
 
   @Column()
   Country: string;
@@ -43,7 +38,19 @@ export class Client {
   Address: string;
 
   @Column()
-  Zip_Code: string;
+  ZipCode: string;
+
+  @OneToMany(() => Device, (device) => device.Client, {
+    nullable: true,
+    cascade: true,
+  })
+  Devices: Device[];
+
+  @OneToMany(() => Program, (program) => program.Client, {
+    nullable: true,
+    cascade: true,
+  })
+  Programs: Program[];
 
   @CreateDateColumn()
   createdAt: Date;

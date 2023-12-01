@@ -1,9 +1,11 @@
 import { Client } from "src/client/entities/client.entity";
+import { Program } from "src/program/entities/program.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   Index,
+  ManyToMany,
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
@@ -27,19 +29,22 @@ export class Device {
   ConnectionID: string;
 
   @Column({ nullable: true })
-  Offline_Image: string;
+  OfflineImage: string;
 
   @Column({ default: "Active", nullable: false })
   Status: string;
 
   @Column({ nullable: true })
-  Status_Message: string;
+  StatusMessage: string;
 
   @Column({ nullable: true })
-  Last_Online: Date;
+  LastOnline: Date;
 
   @ManyToOne(() => Client, (client) => client.Devices, { nullable: false })
   Client: Client;
+
+  @ManyToMany(() => Program, (program) => program.Devices, { nullable: true })
+  Programs: Program[];
 
   @CreateDateColumn()
   createdAt: Date;

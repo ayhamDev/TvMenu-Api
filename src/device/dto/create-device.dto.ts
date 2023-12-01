@@ -1,13 +1,15 @@
-import { IsNotEmpty, IsOptional, IsIn } from "class-validator";
+import { IsString, IsOptional, IsIn } from "class-validator";
+import { CreateClientDto } from "src/client/dto/create-client.dto";
+import { CreateProgramDto } from "src/program/dto/create-program.dto";
 
 export class CreateDeviceDto {
-  @IsNotEmpty()
+  @IsString()
   id: string;
 
-  @IsNotEmpty()
+  @IsString()
   Token: string;
 
-  @IsNotEmpty()
+  @IsString()
   Name: string;
 
   @IsOptional()
@@ -29,4 +31,10 @@ export class CreateDeviceDto {
 
   @IsOptional()
   Last_Online: Date;
+
+  @IsOptional()
+  Client: CreateClientDto;
+
+  @IsOptional()
+  Programs: CreateProgramDto[];
 }

@@ -1,9 +1,9 @@
-import { IsEmail, Min } from "class-validator";
+import { IsEmail, IsStrongPassword, Min } from "class-validator";
 
 export class AdminDto {
   @IsEmail()
   email: string;
 
-  @Min(3)
+  @IsStrongPassword()
   password: string;
 }
