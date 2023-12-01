@@ -34,7 +34,7 @@ export class Client {
   @Column()
   City: string;
 
-  @Column()
+  @Column("text")
   Address: string;
 
   @Column()

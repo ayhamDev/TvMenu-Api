@@ -22,7 +22,7 @@ export class Device {
   @Column()
   Name: string;
 
-  @Column({ nullable: true })
+  @Column("text", { nullable: true })
   Description: string;
 
   @Column({ nullable: true })

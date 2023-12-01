@@ -1,15 +1,14 @@
 import {
-  IsEmail,
   IsString,
   IsOptional,
   IsStrongPassword,
-  IsString,
+  IsEmail,
 } from "class-validator";
 import { CreateDeviceDto } from "src/device/dto/create-device.dto";
 import { CreateProgramDto } from "src/program/dto/create-program.dto";
 
 export class CreateClientDto {
-  @IsString()
+  @IsEmail()
   email: string;
 
   @IsStrongPassword()

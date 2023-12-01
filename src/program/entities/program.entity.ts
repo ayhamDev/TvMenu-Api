@@ -28,7 +28,7 @@ export class Program {
   @Column()
   Name: string;
 
-  @Column({ nullable: true })
+  @Column("text", { nullable: true })
   Description: string;
 
   @Column()
@@ -68,10 +68,10 @@ export class Program {
   NextLoop: number;
 
   @Column()
-  StartAnimation: string;
+  EnterAnimation: string;
 
   @Column()
-  EndAnimation: string;
+  LeaveAnimation: string;
 
   @Column()
   StartDateTime: string;

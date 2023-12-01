@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsIn } from "class-validator";
+import { IsString, IsOptional, IsIn, isDate, IsDate } from "class-validator";
 import { CreateClientDto } from "src/client/dto/create-client.dto";
 import { CreateProgramDto } from "src/program/dto/create-program.dto";
 
@@ -30,9 +30,11 @@ export class CreateDeviceDto {
   Status_Message: string;
 
   @IsOptional()
+  @IsDate()
   Last_Online: Date;
 
   @IsOptional()
+  @IsDate()
   Client: CreateClientDto;
 
   @IsOptional()

@@ -1,4 +1,5 @@
-import { Client } from "src/client/entities/client.entity";
+import { IClient } from "src/client/interface/client.interface";
+import { IProgram } from "src/program/interface/program.interface";
 
 export interface IDevice {
   id: string;
@@ -19,7 +20,8 @@ export interface IDevice {
 
   Last_Online: Date;
 
-  Client: Client;
+  Client?: IClient;
+  Programs?: IProgram;
 
   createdAt: Date;
 
