@@ -8,6 +8,7 @@ import { Admin } from "./admin/entities/admin.entity";
 import { ClientModule } from "./client/client.module";
 import { Client } from "./client/entities/client.entity";
 import { DeviceModule } from "./device/device.module";
+import { Device } from "./device/entities/device.entity";
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { DeviceModule } from "./device/device.module";
       },
       logging: process.env.NODE_ENV != "production" ? true : false,
       synchronize: process.env.NODE_ENV != "production" ? true : false,
-      entities: [Admin, Client],
+      entities: [Admin, Client, Device],
     }),
     AdminModule,
     ClientModule,

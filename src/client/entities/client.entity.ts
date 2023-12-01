@@ -1,4 +1,4 @@
-import { isIn } from "class-validator";
+import { Device } from "src/device/entities/device.entity";
 import {
   CreateDateColumn,
   Entity,
@@ -6,12 +6,19 @@ import {
   UpdateDateColumn,
   Column,
   Index,
+  OneToMany,
 } from "typeorm";
 
 @Entity()
 export class Client {
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @OneToMany(() => Device, (device) => device.Client, {
+    nullable: true,
+    cascade: true,
+  })
+  Devices: Device[];
 
   @Column({ unique: true })
   @Index()

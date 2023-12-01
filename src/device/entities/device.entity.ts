@@ -1,8 +1,10 @@
+import { Client } from "src/client/entities/client.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
   Index,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -35,6 +37,9 @@ export class Device {
 
   @Column({ nullable: true })
   Last_Online: Date;
+
+  @ManyToOne(() => Client, (client) => client.Devices, { nullable: false })
+  Client: Client;
 
   @CreateDateColumn()
   createdAt: Date;
