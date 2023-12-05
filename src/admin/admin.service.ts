@@ -4,8 +4,10 @@ import {
   InternalServerErrorException,
   ConflictException,
   HttpStatus,
+  BadRequestException,
+  NotFoundException,
 } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Repository, TypeORMError } from "typeorm";
 import { Admin } from "./entities/admin.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AdminDto } from "./dto/admin.dto";
@@ -30,11 +32,11 @@ export class AdminService implements OnModuleInit {
       );
     if (Admin.length == 0) {
       console.log("Creating Defualt Admin...");
-      const DefualtAdmin = await this.Register({
+      await this.Register({
         email: "admin@example.com",
         password: "123qweasdZXC_-",
       });
-      console.log("Defualt Admin Created Successfully");
+      console.log("Defualt Admin Created Successfully :");
       console.table({
         email: "admin@example.com",
         password: "123qweasdZXC_-",
@@ -57,10 +59,42 @@ export class AdminService implements OnModuleInit {
     );
     if (AdminError)
       throw new ConflictException("Admin With This Email Already Exists");
+    const { password, ...reset } = RegisteredAdmin;
     return {
       message: "Admin Created Successfully",
       statusCode: HttpStatus.CREATED,
-      data: RegisteredAdmin,
+      data: reset,
     };
+  }
+  async Login(adminDto: AdminDto) {
+    const [admin, error] = await this.CleanPromise.Do(
+      this.AdminRepository.findOne({
+        where: {
+          email: adminDto.email,
+        },
+      })
+    );
+    if (error) throw new InternalServerErrorException();
+    if (!admin) return null;
+
+    const PasswordValid = await this.CleanPromise.Do(
+      bcrypt.compare(adminDto.password, admin.password)
+    );
+    if (!PasswordValid) return null;
+    const { password, ...reset } = admin;
+    return reset;
+  }
+  async findById(id: string) {
+    if (!id) throw new BadRequestException("Missing Parameter");
+    const [Admin, error] = await this.CleanPromise.Do(
+      this.AdminRepository.findOne({
+        where: {
+          id,
+        },
+      })
+    );
+    if (error) throw new NotFoundException("Admin Not Found");
+    const { password, ...rest } = Admin;
+    return rest;
   }
 }
