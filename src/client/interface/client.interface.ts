@@ -11,21 +11,21 @@ export interface IClient extends IDates {
 
   password: string;
 
-  Store_Name: string;
+  storeName: string;
 
-  Country: string;
+  country: string;
 
-  State: string;
+  state: string;
 
-  City: string;
+  city: string;
 
-  Address: string;
+  address: string;
 
-  Zip_Code: string;
+  zipCode: string;
 
-  Devices?: IDevice[];
+  devices?: IDevice[];
 
-  Programs?: IProgram[];
+  programs?: IProgram[];
 
   createdAt: Date;
 

@@ -16,72 +16,72 @@ export class Program {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @ManyToMany(() => Device, { nullable: true })
-  @JoinTable({
-    name: "programs_devices",
-  })
-  Devices: Device[];
-
-  @ManyToOne(() => Client, (client) => client.Programs, { nullable: false })
-  Client: Client;
-
   @Column()
   Name: string;
 
   @Column("text", { nullable: true })
-  Description: string;
+  description: string;
 
   @Column()
-  LayerNumber: number;
+  layerNumber: number;
 
   @Column()
-  Type: number;
+  type: number;
 
   @Column()
-  WebUrl: string;
+  webUrl: string;
 
   @Column()
-  ImageUrl: string;
+  imageUrl: string;
 
   @Column()
-  VideoUrl: string;
+  videoUrl: string;
+
+  @Column({ default: "Active", nullable: false })
+  status: string;
 
   @Column()
-  Status: string;
+  x: number;
 
   @Column()
-  X: number;
+  y: number;
 
   @Column()
-  Y: number;
+  width: number;
 
   @Column()
-  Width: number;
+  height: number;
 
   @Column()
-  Height: number;
+  duration: number;
 
   @Column()
-  Duration: number;
+  nextLoop: number;
 
   @Column()
-  NextLoop: number;
+  enterAnimation: string;
 
   @Column()
-  EnterAnimation: string;
+  leaveAnimation: string;
 
   @Column()
-  LeaveAnimation: string;
+  startDateTime: string;
 
   @Column()
-  StartDateTime: string;
-
-  @Column()
-  EndDateTime: string;
+  endDateTime: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToMany(() => Device, { nullable: true })
+  @JoinTable({
+    name: "programs_devices",
+  })
+  devices: Device[];
+
+  @ManyToOne(() => Client, (client) => client.programs, { nullable: false })
+  client: Client;
 }

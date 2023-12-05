@@ -12,6 +12,10 @@
   },
   "moduleNameMapper": {
     "sa/utls/(.*)": "<rootDir>/../libs/utls/src/$1",
-    "sa/utls": "<rootDir>/../libs/utls/src"
+    "sa/utls": "<rootDir>/../libs/utls/src",
+    "CleanPromise/clean-promise/(.*)": "<rootDir>/../libs/clean-promise/src/$1",
+    "CleanPromise/clean-promise": "<rootDir>/../libs/clean-promise/src",
+    "@CleanPromise/clean-promise/(.*)": "<rootDir>/../libs/clean-promise/src/$1",
+    "@CleanPromise/clean-promise": "<rootDir>/../libs/clean-promise/src"
   }
 }

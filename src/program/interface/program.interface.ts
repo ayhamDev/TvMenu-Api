@@ -2,8 +2,9 @@ import { EnterAnimation } from "src/program/interface/enter-animation.interface"
 import { LeaveAnimation } from "src/program/interface/leave-animation.interface";
 import { IClient } from "src/client/interface/client.interface";
 import { IDevice } from "src/device/interface/device.interface";
+import { IDates } from "@interface/Dates/Dates.interface";
 
-export interface IProgram {
+export interface IProgram extends IDates {
   id: string;
 
   Devices?: IDevice[];
@@ -45,8 +46,4 @@ export interface IProgram {
   StartDateTime: string;
 
   EndDateTime: string;
-
-  createdAt: Date;
-
-  updatedAt: Date;
 }

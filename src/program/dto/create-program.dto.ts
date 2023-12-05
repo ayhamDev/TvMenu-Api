@@ -12,63 +12,77 @@ import { EnterAnimationValues } from "../interface/enter-animation.interface";
 import { LeaveAnimationValues } from "../interface/leave-animation.interface";
 
 export class CreateProgramDto {
+  @IsNotEmpty()
   @IsString()
-  Name: string;
+  name: string;
 
   @IsOptional()
-  Description: string;
+  description: string;
 
+  @IsNotEmpty()
   @IsNumber()
-  LayerNumber: number;
+  layerNumber: number;
 
   @IsIn([1, 2, 3])
-  Type: number;
+  type: number;
 
+  @IsNotEmpty()
   @IsString()
-  WebUrl: string;
+  webUrl: string;
 
+  @IsNotEmpty()
   @IsString()
-  ImageUrl: string;
+  imageUrl: string;
 
+  @IsNotEmpty()
   @IsString()
-  VideoUrl: string;
+  videoUrl: string;
 
+  @IsNotEmpty()
   @IsString()
-  Status: string;
+  status: string;
 
+  @IsNotEmpty()
   @IsNumber()
-  X: number;
+  x: number;
 
+  @IsNotEmpty()
   @IsNumber()
-  Y: number;
+  y: number;
 
+  @IsNotEmpty()
   @IsPositive()
-  Width: number;
+  width: number;
 
+  @IsNotEmpty()
   @IsPositive()
-  Height: number;
+  height: number;
 
+  @IsNotEmpty()
   @IsPositive()
-  Duration: number;
+  duration: number;
 
+  @IsNotEmpty()
   @IsPositive()
-  NextLoop: number;
+  nextLoop: number;
 
   @IsIn(EnterAnimationValues)
-  EnterAnimation: string;
+  enterAnimation: string;
 
   @IsIn(LeaveAnimationValues)
-  LeaveAnimation: string;
+  leaveAnimation: string;
 
+  @IsNotEmpty()
   @IsString()
-  StartDateTime: string;
+  startDateTime: string;
 
+  @IsNotEmpty()
   @IsString()
-  EndDateTime: string;
+  endDateTime: string;
 
   @IsOptional()
-  Client: CreateClientDto;
+  client: CreateClientDto;
 
   @IsOptional()
-  Devices: CreateDeviceDto[];
+  devices: CreateDeviceDto[];
 }

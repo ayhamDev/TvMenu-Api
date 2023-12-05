@@ -1,42 +1,51 @@
-import { IsString, IsOptional, IsIn, isDate, IsDate } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  IsIn,
+  isDate,
+  IsDate,
+  IsNotEmpty,
+} from "class-validator";
 import { CreateClientDto } from "src/client/dto/create-client.dto";
 import { CreateProgramDto } from "src/program/dto/create-program.dto";
 
 export class CreateDeviceDto {
+  @IsNotEmpty()
   @IsString()
   id: string;
 
+  @IsNotEmpty()
   @IsString()
-  Token: string;
+  token: string;
 
+  @IsNotEmpty()
   @IsString()
-  Name: string;
+  name: string;
 
   @IsOptional()
-  Description: string;
+  description: string;
 
   @IsOptional()
-  ConnectionID: string;
+  connectionID: string;
 
   @IsOptional()
-  Offline_Image: string;
+  offlineImage: string;
 
   @IsIn(["Active", "Suspended"], {
-    message: "Invalid Status Value, Only Active And Suspended Are Valid Status",
+    // message: "Invalid Status Value, Only Active And Suspended Are Valid Status",
   })
-  Status: string;
+  status: string;
 
   @IsOptional()
-  Status_Message: string;
-
-  @IsOptional()
-  @IsDate()
-  Last_Online: Date;
+  statusMessage: string;
 
   @IsOptional()
   @IsDate()
-  Client: CreateClientDto;
+  lastOnline: Date;
 
   @IsOptional()
-  Programs: CreateProgramDto[];
+  client: CreateClientDto;
+
+  @IsOptional()
+  programs: CreateProgramDto[];
 }

@@ -16,35 +16,35 @@ export class Device {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  Token: string;
+  @Column("text")
+  token: string;
 
   @Column()
-  Name: string;
+  name: string;
 
   @Column("text", { nullable: true })
-  Description: string;
+  description: string;
 
   @Column({ nullable: true })
-  ConnectionID: string;
+  connectionID: string;
 
   @Column({ nullable: true })
-  OfflineImage: string;
+  offlineImage: string;
 
   @Column({ default: "Active", nullable: false })
-  Status: string;
+  status: string;
 
   @Column({ nullable: true })
-  StatusMessage: string;
+  statusMessage: string;
 
   @Column({ nullable: true })
-  LastOnline: Date;
+  lastOnline: Date;
 
-  @ManyToOne(() => Client, (client) => client.Devices, { nullable: false })
-  Client: Client;
+  @ManyToOne(() => Client, (client) => client.devices, { nullable: false })
+  client: Client;
 
-  @ManyToMany(() => Program, (program) => program.Devices, { nullable: true })
-  Programs: Program[];
+  @ManyToMany(() => Program, (program) => program.devices, { nullable: true })
+  programs: Program[];
 
   @CreateDateColumn()
   createdAt: Date;

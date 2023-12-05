@@ -11,6 +11,9 @@ import { DeviceModule } from "./device/device.module";
 import { Device } from "./device/entities/device.entity";
 import { ProgramModule } from "./program/program.module";
 import { Program } from "./program/entities/program.entity";
+import { UnregisteredModule } from "./unregistered/unregistered.module";
+import { Unregistered } from "./unregistered/entities/unregistered.entity";
+import { CleanPromiseModule } from "@CleanPromise/clean-promise";
 
 @Module({
   imports: [
@@ -27,12 +30,14 @@ import { Program } from "./program/entities/program.entity";
       },
       logging: process.env.NODE_ENV != "production" ? true : false,
       synchronize: process.env.NODE_ENV != "production" ? true : false,
-      entities: [Admin, Client, Device, Program],
+      entities: [Admin, Client, Device, Program, Unregistered],
     }),
+    CleanPromiseModule,
     AdminModule,
     ClientModule,
     DeviceModule,
     ProgramModule,
+    UnregisteredModule,
   ],
   controllers: [AppController],
   providers: [AppService],

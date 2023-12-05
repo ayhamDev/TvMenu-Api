@@ -7,5 +7,14 @@
     "webpack": true
   },
   "projects": {
+    "clean-promise": {
+      "type": "library",
+      "root": "libs/clean-promise",
+      "entryFile": "index",
+      "sourceRoot": "libs/clean-promise/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/clean-promise/tsconfig.lib.json"
+      }
+    }
   }
 }

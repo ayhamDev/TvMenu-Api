@@ -1,5 +1,6 @@
 import { Device } from "src/device/entities/device.entity";
 import { Program } from "src/program/entities/program.entity";
+import { Unregistered } from "src/unregistered/entities/unregistered.entity";
 import {
   CreateDateColumn,
   Entity,
@@ -23,34 +24,40 @@ export class Client {
   password: string;
 
   @Column()
-  StoreName: string;
+  storeName: string;
 
   @Column()
-  Country: string;
+  country: string;
 
   @Column()
-  State: string;
+  state: string;
 
   @Column()
-  City: string;
+  city: string;
 
   @Column("text")
-  Address: string;
+  address: string;
 
   @Column()
-  ZipCode: string;
+  zipCode: string;
 
-  @OneToMany(() => Device, (device) => device.Client, {
+  @OneToMany(() => Device, (device) => device.client, {
     nullable: true,
     cascade: true,
   })
-  Devices: Device[];
+  devices: Device[];
 
-  @OneToMany(() => Program, (program) => program.Client, {
+  @OneToMany(() => Unregistered, (Unregistered) => Unregistered.client, {
     nullable: true,
     cascade: true,
   })
-  Programs: Program[];
+  unregisteredDevices: Unregistered[];
+
+  @OneToMany(() => Program, (program) => program.client, {
+    nullable: true,
+    cascade: true,
+  })
+  programs: Program[];
 
   @CreateDateColumn()
   createdAt: Date;

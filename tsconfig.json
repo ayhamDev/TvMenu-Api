@@ -21,6 +21,12 @@
       "@interface/*": [
         "src/interface/*"
       ],
+      "@CleanPromise/clean-promise": [
+        "libs/clean-promise/src"
+      ],
+      "@CleanPromise/clean-promise/*": [
+        "libs/clean-promise/src/*"
+      ]
     }
   }
 }

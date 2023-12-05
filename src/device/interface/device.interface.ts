@@ -1,29 +1,26 @@
+import { IDates } from "@interface/Dates/Dates.interface";
 import { IClient } from "src/client/interface/client.interface";
 import { IProgram } from "src/program/interface/program.interface";
 
-export interface IDevice {
+export interface IDevice extends IDates {
   id: string;
 
-  Token: string;
+  token: string;
 
-  Name: string;
+  name: string;
 
-  Description: string;
+  description: string;
 
-  ConnectionID: string;
+  connectionID: string;
 
-  Offline_Image: string;
+  offlineImage: string;
 
-  Status: string;
+  status: string;
 
-  Status_Message: string;
+  statusMessage: string;
 
-  Last_Online: Date;
+  lastOnline: Date;
 
-  Client?: IClient;
-  Programs?: IProgram;
-
-  createdAt: Date;
-
-  updatedAt: Date;
+  client?: IClient;
+  programs?: IProgram;
 }

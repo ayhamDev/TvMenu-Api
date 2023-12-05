@@ -3,38 +3,47 @@ import {
   IsOptional,
   IsStrongPassword,
   IsEmail,
+  IsNotEmpty,
 } from "class-validator";
 import { CreateDeviceDto } from "src/device/dto/create-device.dto";
 import { CreateProgramDto } from "src/program/dto/create-program.dto";
 
 export class CreateClientDto {
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  @IsNotEmpty()
   @IsStrongPassword()
   password: string;
 
+  @IsNotEmpty()
   @IsString()
-  StoreName: string;
+  storeName: string;
 
+  @IsNotEmpty()
   @IsString()
-  Country: string;
+  country: string;
 
+  @IsNotEmpty()
   @IsString()
-  State: string;
+  state: string;
 
+  @IsNotEmpty()
   @IsString()
-  City: string;
+  city: string;
 
+  @IsNotEmpty()
   @IsString()
-  Address: string;
+  address: string;
 
+  @IsNotEmpty()
   @IsString()
-  ZipCode: string;
+  zipCode: string;
 
   @IsOptional()
-  Devices: CreateDeviceDto[];
+  devices: CreateDeviceDto[];
 
   @IsOptional()
-  Programs: CreateProgramDto[];
+  programs: CreateProgramDto[];
 }
