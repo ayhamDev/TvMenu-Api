@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import * as moment from "moment";
 import { AdminService } from "src/admin/admin.service";
 import { AdminDto } from "src/admin/dto/admin.dto";
 @Injectable()
@@ -25,8 +26,16 @@ export class AuthService {
     );
     if (error) return [null, error];
     if (!valid) return [null, "Not Valid"];
+    const payload = this.JwtService.decode(Token);
+    const [admin, adminError] = await this.CleanPromise.Do(
+      this.AdminSerivce.findById(payload.id)
+    );
+    if (adminError) return [null, adminError];
+    if (!admin) return [null, true];
+    const ValidToken = moment(payload.updatedAt).isSame(admin.updatedAt);
+    if (!ValidToken) return [null, true];
 
-    return [this.JwtService.decode(Token), null];
+    return [payload, null];
   }
   async IssueToken(payload: object | Buffer) {
     return this.JwtService.signAsync(payload);

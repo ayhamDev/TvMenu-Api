@@ -117,7 +117,7 @@ export class AdminService implements OnModuleInit {
         },
       })
     );
-    if (error) throw new NotFoundException("Admin Not Found");
+    if (error) throw new NotFoundException("No Admin Found With The Given Id");
     return Admin;
   }
 
@@ -135,13 +135,34 @@ export class AdminService implements OnModuleInit {
       StatusCode: 200,
     };
   }
+  async DeleteManyAdmins(ids: string[]) {
+    const [DeletedAdmin, error] = await this.CleanPromise.Do(
+      this.AdminRepository.delete([...ids])
+    );
+
+    if (error)
+      throw new InternalServerErrorException("Couldn't Delete the Admins");
+    if (!DeletedAdmin.affected)
+      throw new NotFoundException("No Admin Found With The Given Id To Delete");
+    return {
+      Message: "Admins Deleted Successfully",
+      StatusCode: 204,
+    };
+  }
+
   async DeleteAdmin(id: string) {
     const [DeletedAdmin, error] = await this.CleanPromise.Do(
       this.AdminRepository.delete({
         id,
       })
     );
-    console.log(error);
-    return DeletedAdmin;
+    if (error)
+      throw new InternalServerErrorException("Couldn't Delete the Admin");
+    if (!DeletedAdmin.affected)
+      throw new NotFoundException("No Admin Found With The Given Id To Delete");
+    return {
+      Message: "Admin Deleted Successfully",
+      StatusCode: 204,
+    };
   }
 }
