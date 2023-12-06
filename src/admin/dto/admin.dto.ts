@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsStrongPassword, Min } from "class-validator";
+import { IsEmail, IsNotEmpty, IsStrongPassword } from "class-validator";
 
 export class AdminDto {
   @IsNotEmpty()

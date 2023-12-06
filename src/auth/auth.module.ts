@@ -7,10 +7,11 @@ import { AdminModule } from "src/admin/admin.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "./auth.guard";
+import { HashPasswordService } from './hash-password/hash-password.service';
 
 @Module({
   imports: [PassportModule, AdminModule],
-  providers: [AuthService, AuthGuard, CleanPromiseService],
+  providers: [AuthService, AuthGuard, CleanPromiseService, HashPasswordService],
   controllers: [AuthController],
 })
 export class AuthModule {}

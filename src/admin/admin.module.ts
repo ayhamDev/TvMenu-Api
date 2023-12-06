@@ -7,11 +7,17 @@ import { Admin } from "./entities/admin.entity";
 import { CleanPromiseService } from "@CleanPromise/clean-promise";
 import { AuthService } from "src/auth/auth.service";
 import { AuthGuard } from "src/auth/auth.guard";
+import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Admin])],
   controllers: [AdminController],
-  providers: [AdminService, AuthService, CleanPromiseService],
+  providers: [
+    AdminService,
+    AuthService,
+    HashPasswordService,
+    CleanPromiseService,
+  ],
   exports: [AdminService],
 })
 export class AdminModule {}
