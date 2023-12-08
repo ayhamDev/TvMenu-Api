@@ -12,9 +12,8 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { Role } from "src/auth/role/role.decorator";
 import { AdminService } from "./admin.service";
 import { AdminDto } from "./dto/admin.dto";
-import { AdminDtoPartialType } from "./dto/admin-PartialType.dto";
-import { AdminPatchPasswordDto } from "./dto/admin-PatchPassword.dto";
 import { AdminDeleteManyDto } from "./dto/admin-DeleteMany.dto";
+import { PatchPasswordDto } from "src/auth/dto/PatchPassword.dto";
 
 @Controller("admin")
 @UseGuards(AuthGuard)
@@ -23,7 +22,7 @@ export class AdminController {
 
   @Post("register")
   @Role("Admin")
-  async Register(@Body() adminDto: AdminDto) {
+  async RegisterAdmin(@Body() adminDto: AdminDto) {
     return await this.AdminService.Register(adminDto);
   }
 
@@ -43,9 +42,9 @@ export class AdminController {
   @Role("Admin")
   PatchAdminPassword(
     @Param("id") id: string,
-    @Body() adminPatchPassword: AdminPatchPasswordDto
+    @Body() PatchPasswordDto: PatchPasswordDto
   ) {
-    return this.AdminService.PatchPassword(id, adminPatchPassword.password);
+    return this.AdminService.PatchPassword(id, PatchPasswordDto.password);
   }
   @Delete("bulk")
   @Role("Admin")

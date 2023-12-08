@@ -15,6 +15,7 @@ import { CleanPromiseService } from "@CleanPromise/clean-promise";
 import * as bcrypt from "bcrypt";
 import { AdminDtoPartialType } from "./dto/admin-PartialType.dto";
 import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
+import { AuthDto } from "src/auth/dto/auth.dto";
 
 @Injectable()
 export class AdminService implements OnModuleInit {
@@ -53,31 +54,30 @@ export class AdminService implements OnModuleInit {
       email: adminDto.email,
       password: HashedPassword,
     });
-    const [RegisteredAdmin, AdminError] = await this.CleanPromise.Do(
+    const [RegisteredAdmin, er] = await this.CleanPromise.Do(
       this.AdminRepository.save(NewAdmin)
     );
-    if (AdminError)
-      throw new ConflictException("Admin With This Email Already Exists");
-    const { password, ...reset } = RegisteredAdmin;
+    if (er) throw new ConflictException("Admin With This Email Already Exists");
+    const { password, ...RegisteredAdminData } = RegisteredAdmin;
     return {
       message: "Admin Created Successfully",
       statusCode: HttpStatus.CREATED,
-      data: reset,
+      data: RegisteredAdminData,
     };
   }
-  async ValidateCredentials(adminDto: AdminDto) {
+  async ValidateCredentials(AuthDto: AuthDto) {
     const [admin, error] = await this.CleanPromise.Do(
       this.AdminRepository.findOne({
         where: {
-          email: adminDto.email,
+          email: AuthDto.email,
         },
       })
     );
-    if (error) throw new InternalServerErrorException();
+    if (error) throw new InternalServerErrorException("Couldn't Find Admin");
     if (!admin) return null;
 
     const [PasswordValid, CompareError] = await this.CleanPromise.Do(
-      bcrypt.compare(adminDto.password, admin.password)
+      bcrypt.compare(AuthDto.password, admin.password)
     );
 
     if (CompareError)
@@ -87,7 +87,7 @@ export class AdminService implements OnModuleInit {
     return reset;
   }
   async GetAll() {
-    const [Admins, error] = await this.CleanPromise.Do(
+    const [admins, error] = await this.CleanPromise.Do(
       this.AdminRepository.find({
         select: {
           id: true,
@@ -99,11 +99,11 @@ export class AdminService implements OnModuleInit {
       })
     );
     if (error) throw new InternalServerErrorException();
-    return Admins;
+    return admins;
   }
   async findById(id: string) {
-    if (!id) throw new BadRequestException("Missing Parameter");
-    const [Admin, error] = await this.CleanPromise.Do(
+    if (!id) throw new BadRequestException("Missing Parameter id");
+    const [admin, error] = await this.CleanPromise.Do(
       this.AdminRepository.findOne({
         select: {
           id: true,
@@ -117,33 +117,39 @@ export class AdminService implements OnModuleInit {
         },
       })
     );
-    if (error) throw new NotFoundException("No Admin Found With The Given Id");
-    return Admin;
+    if (error)
+      throw new InternalServerErrorException(
+        "The Given Id is Not Of The Type uniqueidentifier"
+      );
+    if (!admin) throw new NotFoundException("No Admin Found With The Given Id");
+    return admin;
   }
 
   async PatchPassword(id: string, password: string) {
-    const Admin = await this.findById(id);
+    const admin = await this.findById(id);
     const HashedPassword = await this.HashPassword.Do(password);
-    Admin.password = HashedPassword;
+    admin.password = HashedPassword;
     const [PatchedAdmin, error] = await this.CleanPromise.Do(
-      this.AdminRepository.save(Admin, {})
+      this.AdminRepository.save(admin, {})
     );
     if (error)
       throw new InternalServerErrorException("Couldn't Patch Password");
     return {
-      message: "Password Patched Successfully",
+      message: "Password Updated Successfully",
       StatusCode: 200,
     };
   }
   async DeleteManyAdmins(ids: string[]) {
-    const [DeletedAdmin, error] = await this.CleanPromise.Do(
+    const [DeletedAdmins, error] = await this.CleanPromise.Do(
       this.AdminRepository.delete([...ids])
     );
 
     if (error)
       throw new InternalServerErrorException("Couldn't Delete the Admins");
-    if (!DeletedAdmin.affected)
-      throw new NotFoundException("No Admin Found With The Given Id To Delete");
+    if (DeletedAdmins && !DeletedAdmins.affected)
+      throw new NotFoundException(
+        "No Admins Found With The Given Id To Delete"
+      );
     return {
       Message: "Admins Deleted Successfully",
       StatusCode: 204,
@@ -158,7 +164,7 @@ export class AdminService implements OnModuleInit {
     );
     if (error)
       throw new InternalServerErrorException("Couldn't Delete the Admin");
-    if (!DeletedAdmin.affected)
+    if (DeletedAdmin && !DeletedAdmin.affected)
       throw new NotFoundException("No Admin Found With The Given Id To Delete");
     return {
       Message: "Admin Deleted Successfully",

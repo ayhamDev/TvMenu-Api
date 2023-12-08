@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsStrongPassword } from "class-validator";
 
-export class AdminPatchPasswordDto {
+export class PatchPasswordDto {
   @IsNotEmpty()
   @IsStrongPassword()
   password: string;

@@ -30,7 +30,6 @@ export class AuthGuard implements CanActivate {
 
     if (error instanceof TokenExpiredError)
       throw new UnauthorizedException("Token Is Expired");
-
     if (error) throw new UnauthorizedException("Token Is Invalid");
 
     if (roles && !roles.includes(payload.Role)) return false;

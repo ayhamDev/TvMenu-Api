@@ -41,9 +41,9 @@ export class CreateClientDto {
   @IsString()
   zipCode: string;
 
-  @IsOptional()
-  devices: CreateDeviceDto[];
+  // @IsOptional()
+  // devices: CreateDeviceDto[];
 
-  @IsOptional()
-  programs: CreateProgramDto[];
+  // @IsOptional()
+  // programs: CreateProgramDto[];
 }
