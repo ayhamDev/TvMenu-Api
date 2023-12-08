@@ -55,7 +55,7 @@ export class ClientController {
         PatchPasswordDto.password
       );
     throw new ForbiddenException(
-      "as a Client You Cant Update Password For Other Clients"
+      "You are not authorized to update this password"
     );
   }
   @Delete("bulk")

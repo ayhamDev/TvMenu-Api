@@ -88,7 +88,7 @@ export class ClientService {
     if (error) throw new InternalServerErrorException();
     return clients;
   }
-  async findByid(id: string, user?: CreateClientDto) {
+  async findByid(id: string) {
     if (!id) throw new BadRequestException("Missing Parameter id");
 
     const [client, error] = await this.CleanPromise.Do(

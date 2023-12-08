@@ -14,13 +14,13 @@ export class Unregistered {
   @PrimaryColumn()
   id: string;
 
-  @Column("text")
-  token: string;
-
   @Column()
   ipAddress: string;
 
-  @VersionColumn()
+  @VersionColumn({
+    default: 1,
+    type: "bigint",
+  })
   requestedCount: number;
 
   @CreateDateColumn()
