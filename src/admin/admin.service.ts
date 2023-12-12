@@ -119,7 +119,7 @@ export class AdminService implements OnModuleInit {
     );
     if (error)
       throw new InternalServerErrorException(
-        "The Given Id is Not Of The Type uniqueidentifier"
+        "The Given Id is Not Of The Type Uniqueidentifier"
       );
     if (!admin) throw new NotFoundException("No Admin Found With The Given Id");
     return admin;

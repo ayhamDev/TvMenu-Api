@@ -17,6 +17,7 @@ import { PatchPasswordDto } from "src/auth/dto/PatchPassword.dto";
 import { ClientDeleteManyDto } from "./dto/client-deletemany.dto";
 import { User } from "src/auth/user/user.decorator";
 import { use } from "passport";
+import { UpdateClientDto } from "./dto/update-client.dto";
 
 @Controller("client")
 @UseGuards(AuthGuard)
@@ -41,8 +42,17 @@ export class ClientController {
   }
 
   @Patch(":id")
+  @Role("Admin")
+  PatchClientData(
+    @Param("id") id: string,
+    @Body() UpdateClientDto: UpdateClientDto
+  ) {
+    return this.clientService.PatchData(id, UpdateClientDto);
+  }
+
+  @Patch(":id/password")
   @Role("Admin", "Client")
-  PatchAdminPassword(
+  PatchClientPassword(
     @Param("id") id: string,
     @User() user,
     @Body() PatchPasswordDto: PatchPasswordDto
@@ -55,7 +65,7 @@ export class ClientController {
         PatchPasswordDto.password
       );
     throw new ForbiddenException(
-      "You are not authorized to update this password"
+      "You are not authorized to Update Password For This Client"
     );
   }
   @Delete("bulk")

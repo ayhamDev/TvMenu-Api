@@ -113,7 +113,7 @@ export class ClientService {
     );
     if (error)
       throw new InternalServerErrorException(
-        "The Given Id is Not Of The Type uniqueidentifier"
+        "The Given Id is Not Of The Type Uniqueidentifier"
       );
     if (!client)
       throw new NotFoundException("No Client Found With The Given Id");
@@ -129,7 +129,8 @@ export class ClientService {
     const [PatchedClient, error] = await this.CleanPromise.Do(
       this.ClientRepository.save(client)
     );
-    if (error) throw new InternalServerErrorException("Couldn't Client Data");
+    if (error)
+      throw new InternalServerErrorException("Couldn't Save Client Data");
     const { password, ...PatchedClientData } = PatchedClient;
     return {
       message: "Client Updated Successfully",
