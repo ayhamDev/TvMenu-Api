@@ -1,22 +1,21 @@
 import {
-  Controller,
-  Post,
-  UseGuards,
   Body,
-  Get,
-  Patch,
-  Param,
+  Controller,
   Delete,
   ForbiddenException,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from "@nestjs/common";
-import { ClientService } from "./client.service";
 import { AuthGuard } from "src/auth/auth.guard";
-import { CreateClientDto } from "./dto/create-client.dto";
-import { Role } from "src/auth/role/role.decorator";
 import { PatchPasswordDto } from "src/auth/dto/PatchPassword.dto";
-import { ClientDeleteManyDto } from "./dto/client-deletemany.dto";
+import { Role } from "src/auth/role/role.decorator";
 import { User } from "src/auth/user/user.decorator";
-import { use } from "passport";
+import { ClientService } from "./client.service";
+import { ClientDeleteManyDto } from "./dto/client-deletemany.dto";
+import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 
 @Controller("client")
@@ -51,21 +50,28 @@ export class ClientController {
   }
 
   @Patch(":id/password")
-  @Role("Admin", "Client")
-  PatchClientPassword(
+  @Role("Admin")
+  Admin__PatchClientPassword(
+    @Param("id") id: string,
+    @Body() PatchPasswordDto: PatchPasswordDto
+  ) {
+    return this.clientService.PatchPassword(id, PatchPasswordDto.password);
+  }
+
+  @Patch(":id/password")
+  @Role("Client")
+  Client__PatchClientPassword(
     @Param("id") id: string,
     @User() user,
     @Body() PatchPasswordDto: PatchPasswordDto
   ) {
-    if (user.Role == "Admin")
-      return this.clientService.PatchPassword(id, PatchPasswordDto.password);
     if (user.Role == "Client" && id === user.id)
       return this.clientService.PatchPassword(
         user.id,
         PatchPasswordDto.password
       );
     throw new ForbiddenException(
-      "You are not authorized to Update Password For This Client"
+      "You are not Authorized to Update Password For This Client"
     );
   }
   @Delete("bulk")

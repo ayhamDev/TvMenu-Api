@@ -8,7 +8,12 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Client } from "./entities/client.entity";
-import { DeepPartial, EntityNotFoundError, Repository } from "typeorm";
+import {
+  DeepPartial,
+  EntityNotFoundError,
+  Repository,
+  TypeORMError,
+} from "typeorm";
 import { CleanPromiseService } from "@CleanPromise/clean-promise";
 import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
 import { CreateClientDto } from "./dto/create-client.dto";
@@ -85,7 +90,10 @@ export class ClientService {
         },
       })
     );
-    if (error) throw new InternalServerErrorException();
+    if (!clients || error)
+      throw new InternalServerErrorException("Couldn't Get Clients");
+    if (clients.length == 0)
+      throw new NotFoundException("No Clients Were Found");
     return clients;
   }
   async findByid(id: string) {
