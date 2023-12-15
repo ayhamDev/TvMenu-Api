@@ -1,4 +1,4 @@
-import { IsIP, IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
+import { IsIP, IsNotEmpty, IsString } from "class-validator";
 
 export class AddUnregisteredDeviceDto {
   @IsNotEmpty()

@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -32,7 +33,10 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("Token Is Expired");
     if (error) throw new UnauthorizedException("Token Is Invalid");
 
-    if (roles && !roles.includes(payload.Role)) return false;
+    if (roles && !roles.includes(payload.Role))
+      throw new ForbiddenException(
+        "You Do Not Have The Required Permissions To Access Admin Resources"
+      );
     request.user = payload;
 
     return true;

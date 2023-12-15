@@ -54,10 +54,14 @@ export class AdminService implements OnModuleInit {
       email: adminDto.email,
       password: HashedPassword,
     });
-    const [RegisteredAdmin, er] = await this.CleanPromise.Do(
+    const [RegisteredAdmin, error] = await this.CleanPromise.Do(
       this.AdminRepository.save(NewAdmin)
     );
-    if (er) throw new ConflictException("Admin With This Email Already Exists");
+    if (error.message.includes("duplicate key"))
+      throw new ConflictException("Admin With This Email Already Exists");
+    if (error)
+      throw new InternalServerErrorException("Couldn't Save The Admin");
+
     const { password, ...RegisteredAdminData } = RegisteredAdmin;
     return {
       message: "Admin Created Successfully",

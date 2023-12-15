@@ -21,7 +21,7 @@ export class Unregistered {
     default: 1,
     type: "bigint",
   })
-  requestedCount: number;
+  UpdatedCount: number;
 
   @CreateDateColumn()
   createdAt: Date;

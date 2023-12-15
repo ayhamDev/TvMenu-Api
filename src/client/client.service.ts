@@ -39,8 +39,10 @@ export class ClientService {
     const [RegisteredClient, error] = await this.CleanPromise.Do(
       this.ClientRepository.save(NewClient)
     );
-    if (error)
+    if (error.message.includes("duplicate key"))
       throw new ConflictException("Client With This Email Already Exists");
+    if (error)
+      throw new InternalServerErrorException("Couldn't Save The Client");
     const {
       password: RegisteredClientHashedPassword,
       ...RegisteredClientData
@@ -90,8 +92,9 @@ export class ClientService {
         },
       })
     );
-    if (!clients || error)
-      throw new InternalServerErrorException("Couldn't Get Clients");
+    if (error instanceof EntityNotFoundError)
+      throw new NotFoundException("No Clients Found");
+    if (error) throw new InternalServerErrorException("Couldn't Get Clients");
     if (clients.length == 0)
       throw new NotFoundException("No Clients Were Found");
     return clients;
