@@ -1,13 +1,4 @@
-import {
-  IsString,
-  IsOptional,
-  IsIn,
-  isDate,
-  IsDate,
-  IsNotEmpty,
-} from "class-validator";
-import { CreateClientDto } from "src/client/dto/create-client.dto";
-import { CreateProgramDto } from "src/program/dto/create-program.dto";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateDeviceDto {
   @IsNotEmpty()
@@ -16,36 +7,9 @@ export class CreateDeviceDto {
 
   @IsNotEmpty()
   @IsString()
-  token: string;
-
-  @IsNotEmpty()
-  @IsString()
   name: string;
 
   @IsOptional()
+  @IsString()
   description: string;
-
-  @IsOptional()
-  connectionID: string;
-
-  @IsOptional()
-  offlineImage: string;
-
-  @IsIn(["Active", "Suspended"], {
-    // message: "Invalid Status Value, Only Active And Suspended Are Valid Status",
-  })
-  status: string;
-
-  @IsOptional()
-  statusMessage: string;
-
-  @IsOptional()
-  @IsDate()
-  lastOnline: Date;
-
-  @IsOptional()
-  client: CreateClientDto;
-
-  @IsOptional()
-  programs: CreateProgramDto[];
 }

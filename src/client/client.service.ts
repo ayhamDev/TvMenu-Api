@@ -176,15 +176,16 @@ export class ClientService {
         " No Clients Found With The Given Ids To Delete"
       );
     return {
-      Message: "Clients Deleted Successfully",
+      Message: "The Clients Were Deleted Successfully",
       StatusCode: 204,
       data: DeletedClients,
     };
   }
   async DeleteClient(id: string) {
     const client = await this.findByid(id);
+
     const [DeletedClient, error] = await this.CleanPromise.Do(
-      this.ClientRepository.delete(client)
+      this.ClientRepository.remove(client)
     );
     if (error)
       throw new InternalServerErrorException("Couldn't Delete the Clients");
@@ -194,7 +195,7 @@ export class ClientService {
       );
 
     return {
-      Message: "Client Deleted Successfully",
+      Message: "The Client Was Deleted Successfully",
       StatusCode: 204,
       data: DeletedClient,
     };

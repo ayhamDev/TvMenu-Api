@@ -39,7 +39,7 @@ export class CreateProgramDto {
   videoUrl: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsIn(["Active", "Suspended"])
   status: string;
 
   @IsNotEmpty()

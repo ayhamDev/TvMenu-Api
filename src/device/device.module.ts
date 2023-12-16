@@ -10,14 +10,17 @@ import { Admin } from "src/admin/entities/admin.entity";
 import { Client } from "src/client/entities/client.entity";
 import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
 import { Device } from "./entities/device.entity";
+import { UnregisteredService } from "src/unregistered/unregistered.service";
+import { Unregistered } from "src/unregistered/entities/unregistered.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, Admin, Client])],
+  imports: [TypeOrmModule.forFeature([Device, Unregistered, Admin, Client])],
   controllers: [DeviceController],
   providers: [
     DeviceService,
     AuthService,
     AdminService,
+    UnregisteredService,
     ClientService,
     HashPasswordService,
     CleanPromiseService,

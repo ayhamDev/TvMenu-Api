@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   PrimaryColumn,
@@ -16,14 +17,14 @@ export class Device {
   @PrimaryColumn()
   id: string;
 
-  @Column("text")
-  token: string;
-
   @Column()
   name: string;
 
   @Column("text", { nullable: true })
   description: string;
+
+  @Column()
+  clientId: string;
 
   @Column({ nullable: true })
   connectionID: string;
@@ -40,7 +41,12 @@ export class Device {
   @Column({ nullable: true })
   lastOnline: Date;
 
-  @ManyToOne(() => Client, (client) => client.devices, { nullable: false })
+  @ManyToOne(() => Client, (client) => client.devices, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    nullable: false,
+  })
+  @JoinColumn({ name: "clientId" })
   client: Client;
 
   @ManyToMany(() => Program, (program) => program.devices, { nullable: true })

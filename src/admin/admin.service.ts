@@ -155,7 +155,7 @@ export class AdminService implements OnModuleInit {
         "No Admins Found With The Given Id To Delete"
       );
     return {
-      Message: "Admins Deleted Successfully",
+      Message: "The Admins Were Deleted Successfully",
       StatusCode: 204,
     };
   }
@@ -171,7 +171,7 @@ export class AdminService implements OnModuleInit {
     if (DeletedAdmin && !DeletedAdmin.affected)
       throw new NotFoundException("No Admin Found With The Given Id To Delete");
     return {
-      Message: "Admin Deleted Successfully",
+      Message: "The Admin Was Deleted Successfully",
       StatusCode: 204,
     };
   }

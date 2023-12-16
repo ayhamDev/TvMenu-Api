@@ -14,15 +14,18 @@ import { AddUnregisteredDeviceDto } from "./dto/device-add-unregistered.dto";
 import { Client } from "src/client/entities/client.entity";
 import { CleanPromiseService } from "@CleanPromise/clean-promise";
 import { UpdateUnregisteredDeviceDto } from "./dto/device-update-unregistered.dto";
+import { Device } from "src/device/entities/device.entity";
 
 @Injectable()
 export class UnregisteredService {
   constructor(
-    private readonly CleanPromise: CleanPromiseService,
+    @InjectRepository(Device)
+    private readonly DeviceRepository: Repository<Device>,
     @InjectRepository(Unregistered)
     private readonly UnregisteredRepository: Repository<Unregistered>,
     @InjectRepository(Client)
-    private readonly ClientRepository: Repository<Client>
+    private readonly ClientRepository: Repository<Client>,
+    private readonly CleanPromise: CleanPromiseService
   ) {}
   async GetAll(clientId?: string) {
     const ClientQuary: FindManyOptions<Unregistered> = clientId
@@ -82,6 +85,16 @@ export class UnregisteredService {
     };
   }
   async addDevice(addDeviceDto: AddUnregisteredDeviceDto) {
+    const [DeviceExists, DeviceExistsError] = await this.CleanPromise.Do(
+      this.DeviceRepository.findOneBy({
+        id: addDeviceDto.id,
+      })
+    );
+    if (DeviceExistsError)
+      throw new InternalServerErrorException("Couldn't Verify The Device");
+
+    if (DeviceExists) throw new ConflictException("Device Already Registered");
+
     const [UnregisteredDeviceExists, UnregisteredDeviceExistsError] =
       await this.CleanPromise.Do(
         this.UnregisteredRepository.findOneBy({
