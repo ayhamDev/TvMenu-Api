@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
@@ -13,6 +14,9 @@ import {
 export class Unregistered {
   @PrimaryColumn()
   id: string;
+
+  @Column()
+  clientId: string;
 
   @Column()
   ipAddress: string;
@@ -29,6 +33,10 @@ export class Unregistered {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Client, (client) => client.unregisteredDevices)
+  @ManyToOne(() => Client, (client) => client.unregisteredDevices, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  @JoinColumn({ name: "clientId" })
   client: Client;
 }

@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
 
     if (roles && !roles.includes(payload.Role))
       throw new ForbiddenException(
-        "You Do Not Have The Required Permissions To Access Admin Resources"
+        "You Do Not Have The Required Permissions To Access These Resources"
       );
     request.user = payload;
 

@@ -55,6 +55,7 @@ export class Client {
 
   @OneToMany(() => Program, (program) => program.client, {
     nullable: true,
+
     cascade: true,
   })
   programs: Program[];

@@ -9,9 +9,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { Admin } from "src/admin/entities/admin.entity";
 import { Client } from "src/client/entities/client.entity";
 import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
+import { Device } from "./entities/device.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Admin, Client])],
+  imports: [TypeOrmModule.forFeature([Device, Admin, Client])],
   controllers: [DeviceController],
   providers: [
     DeviceService,

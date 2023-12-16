@@ -1,3 +1,4 @@
+import { CleanPromiseService } from "@CleanPromise/clean-promise";
 import {
   BadRequestException,
   ConflictException,
@@ -7,19 +8,13 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Client } from "./entities/client.entity";
-import {
-  DeepPartial,
-  EntityNotFoundError,
-  Repository,
-  TypeORMError,
-} from "typeorm";
-import { CleanPromiseService } from "@CleanPromise/clean-promise";
-import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
-import { CreateClientDto } from "./dto/create-client.dto";
 import * as bcrypt from "bcrypt";
-import { UpdateClientDto } from "./dto/update-client.dto";
 import { AuthDto } from "src/auth/dto/auth.dto";
+import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
+import { EntityNotFoundError, Repository } from "typeorm";
+import { CreateClientDto } from "./dto/create-client.dto";
+import { UpdateClientDto } from "./dto/update-client.dto";
+import { Client } from "./entities/client.entity";
 
 @Injectable()
 export class ClientService {
@@ -31,18 +26,20 @@ export class ClientService {
 
   async Register(ClientDto: CreateClientDto) {
     const { password, ...ClientData } = ClientDto;
+
     const HashedPassword = await this.HashPassword.Do(password);
+
     const NewClient = this.ClientRepository.create({
       ...ClientData,
       password: HashedPassword,
     });
+
     const [RegisteredClient, error] = await this.CleanPromise.Do(
       this.ClientRepository.save(NewClient)
     );
-    if (error.message.includes("duplicate key"))
-      throw new ConflictException("Client With This Email Already Exists");
+
     if (error)
-      throw new InternalServerErrorException("Couldn't Save The Client");
+      throw new ConflictException("Client With This Email Already Exists");
     const {
       password: RegisteredClientHashedPassword,
       ...RegisteredClientData
@@ -74,7 +71,7 @@ export class ClientService {
     const { password, ...clientData } = client;
     return clientData;
   }
-  async GetAll() {
+  async GetAll(ids?: string[]) {
     const [clients, error] = await this.CleanPromise.Do(
       this.ClientRepository.find({
         select: {
@@ -164,27 +161,34 @@ export class ClientService {
     };
   }
   async DeleteManyClients(ids: string[]) {
+    const clients = [];
+    for (let index = 0; index < ids.length; index++) {
+      const client = await this.findByid(ids[index]);
+      clients.push(client);
+    }
     const [DeletedClients, error] = await this.CleanPromise.Do(
-      this.ClientRepository.delete([...ids])
+      this.ClientRepository.remove([...clients])
     );
     if (error)
       throw new InternalServerErrorException("Couldn't Delete the Clients");
-    if (DeletedClients && !DeletedClients.affected)
+    if (DeletedClients.length == 0)
       throw new NotFoundException(
         " No Clients Found With The Given Ids To Delete"
       );
     return {
       Message: "Clients Deleted Successfully",
       StatusCode: 204,
+      data: DeletedClients,
     };
   }
   async DeleteClient(id: string) {
+    const client = await this.findByid(id);
     const [DeletedClient, error] = await this.CleanPromise.Do(
-      this.ClientRepository.delete(id)
+      this.ClientRepository.delete(client)
     );
     if (error)
       throw new InternalServerErrorException("Couldn't Delete the Clients");
-    if (DeletedClient && !DeletedClient.affected)
+    if (!DeletedClient)
       throw new NotFoundException(
         "No Client Found With The Given Id To Delete"
       );
@@ -192,6 +196,7 @@ export class ClientService {
     return {
       Message: "Client Deleted Successfully",
       StatusCode: 204,
+      data: DeletedClient,
     };
   }
 }

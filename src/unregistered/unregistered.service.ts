@@ -24,49 +24,14 @@ export class UnregisteredService {
     @InjectRepository(Client)
     private readonly ClientRepository: Repository<Client>
   ) {}
-  async GetAll(ClientId?: string) {
-    const ClientQuary: FindManyOptions<Unregistered> = ClientId
+  async GetAll(clientId?: string) {
+    const ClientQuary: FindManyOptions<Unregistered> = clientId
       ? {
           where: {
-            client: {
-              id: ClientId,
-            },
+            clientId: clientId,
           },
-          select: {
-            client: {
-              id: true,
-              email: true,
-              password: false,
-              storeName: true,
-              country: true,
-              state: true,
-              city: true,
-              address: true,
-              zipCode: true,
-              createdAt: true,
-              updatedAt: true,
-            },
-          },
-          relations: ["client"],
         }
-      : {
-          select: {
-            client: {
-              id: true,
-              email: true,
-              password: false,
-              storeName: true,
-              country: true,
-              state: true,
-              city: true,
-              address: true,
-              zipCode: true,
-              createdAt: true,
-              updatedAt: true,
-            },
-          },
-          relations: ["client"],
-        };
+      : {};
     const [devices, error] = await this.CleanPromise.Do(
       this.UnregisteredRepository.find(ClientQuary)
     );
@@ -86,29 +51,13 @@ export class UnregisteredService {
         where: {
           id,
         },
-        select: {
-          client: {
-            id: true,
-            email: true,
-            password: false,
-            storeName: true,
-            country: true,
-            state: true,
-            city: true,
-            address: true,
-            zipCode: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        relations: ["client"],
       })
     );
     if (error)
       throw new InternalServerErrorException("The Given Id is Not Valid");
     if (!UnRegisteredDevice)
       throw new NotFoundException("No UnRegistered Device Was Found");
-    if (clientId && UnRegisteredDevice.client.id !== clientId)
+    if (clientId && UnRegisteredDevice.clientId !== clientId)
       throw new ForbiddenException(
         "This UnRegistered Device Belongs To Other Client"
       );
@@ -149,15 +98,13 @@ export class UnregisteredService {
     const [client, error] = await this.CleanPromise.Do(
       this.ClientRepository.findOne({
         where: {
-          id: addDeviceDto.id,
+          id: addDeviceDto.clientId,
         },
       })
     );
-    if (error instanceof EntityNotFoundError)
-      throw new NotFoundException("No Client Found With The Requested Id");
     if (error)
       throw new InternalServerErrorException(
-        "Couldn't Verify The Client, Plase Check Client Id"
+        "Couldn't Find Or Verify The Client, Plase Check The Client Id"
       );
     if (!client)
       throw new NotFoundException("No Client Found With The Requested Id");
@@ -176,7 +123,7 @@ export class UnregisteredService {
       );
     const { client: ClientData, ...reset } = unregisteredDeviceData;
     return {
-      messsage: "Device Added Or Updated Successfully",
+      messsage: "Device Added Successfully, it needs To be Registered",
       statusCode: 200,
       data: reset,
     };
