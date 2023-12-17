@@ -11,7 +11,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { AuthDto } from "src/auth/dto/auth.dto";
 import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
-import { EntityNotFoundError, Repository } from "typeorm";
+import { EntityNotFoundError, Repository, In } from "typeorm";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 import { Client } from "./entities/client.entity";
@@ -71,7 +71,7 @@ export class ClientService {
     const { password, ...clientData } = client;
     return clientData;
   }
-  async GetAll(ids?: string[]) {
+  async GetAll() {
     const [clients, error] = await this.CleanPromise.Do(
       this.ClientRepository.find({
         select: {
@@ -161,11 +161,20 @@ export class ClientService {
     };
   }
   async DeleteManyClients(ids: string[]) {
-    const clients = [];
-    for (let index = 0; index < ids.length; index++) {
-      const client = await this.findByid(ids[index]);
-      clients.push(client);
-    }
+    console.log(ids.length);
+
+    const [clients, ClientErrors] = await this.CleanPromise.Do(
+      this.ClientRepository.createQueryBuilder().whereInIds(ids).getMany()
+    );
+    console.log(clients.length);
+
+    if (ClientErrors)
+      throw new InternalServerErrorException(
+        "Couldn't Verify Clients, Plase Check The Client Ids"
+      );
+    if (clients.length !== ids.length)
+      throw new NotFoundException("Some Or All Client Where Not Found");
+
     const [DeletedClients, error] = await this.CleanPromise.Do(
       this.ClientRepository.remove([...clients])
     );
@@ -178,7 +187,6 @@ export class ClientService {
     return {
       Message: "The Clients Were Deleted Successfully",
       StatusCode: 204,
-      data: DeletedClients,
     };
   }
   async DeleteClient(id: string) {

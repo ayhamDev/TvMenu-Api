@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -15,6 +16,9 @@ import {
 export class Program {
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @Column()
+  clientId: string;
 
   @Column()
   Name: string;
@@ -83,5 +87,6 @@ export class Program {
   devices: Device[];
 
   @ManyToOne(() => Client, (client) => client.programs, { nullable: false })
+  @JoinColumn({ name: "clientId" })
   client: Client;
 }
