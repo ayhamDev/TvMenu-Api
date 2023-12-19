@@ -21,7 +21,7 @@ export class Program {
   clientId: string;
 
   @Column()
-  Name: string;
+  name: string;
 
   @Column("text", { nullable: true })
   description: string;
@@ -32,34 +32,40 @@ export class Program {
   @Column()
   type: number;
 
-  @Column()
+  @Column({ nullable: true })
   webUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
   imageUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
   videoUrl: string;
 
   @Column({ default: "Active", nullable: false })
   status: string;
 
   @Column()
-  x: number;
+  x: string;
 
   @Column()
-  y: number;
+  y: string;
 
   @Column()
-  width: number;
+  width: string;
 
   @Column()
-  height: number;
+  height: string;
 
-  @Column()
+  @Column({
+    default: 0,
+    nullable: true,
+  })
   duration: number;
 
-  @Column()
+  @Column({
+    default: 0,
+    nullable: true,
+  })
   nextLoop: number;
 
   @Column()

@@ -1,4 +1,8 @@
 import {
+  ArrayNotEmpty,
+  IsArray,
+  IsDate,
+  IsISO8601,
   IsIn,
   IsNotEmpty,
   IsNumber,
@@ -6,12 +10,22 @@ import {
   IsPositive,
   IsString,
 } from "class-validator";
-import { CreateClientDto } from "src/client/dto/create-client.dto";
-import { CreateDeviceDto } from "src/device/dto/create-device.dto";
 import { EnterAnimationValues } from "../interface/enter-animation.interface";
 import { LeaveAnimationValues } from "../interface/leave-animation.interface";
+import { IsNumberOrPercentage } from "../is-number-or-percentage/is-number-or-percentage.decorator";
+import { Type } from "class-transformer";
 
 export class CreateProgramDto {
+  @IsNotEmpty()
+  @IsString()
+  clientId: string;
+
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  deviceIds: string[];
+
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -26,15 +40,15 @@ export class CreateProgramDto {
   @IsIn([1, 2, 3])
   type: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   webUrl: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   imageUrl: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   videoUrl: string;
 
@@ -43,46 +57,42 @@ export class CreateProgramDto {
   status: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  x: number;
+  @IsNumberOrPercentage()
+  x: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  y: number;
+  @IsNumberOrPercentage()
+  y: string;
 
   @IsNotEmpty()
-  @IsPositive()
-  width: number;
+  @IsNumberOrPercentage()
+  width: string;
 
   @IsNotEmpty()
-  @IsPositive()
-  height: number;
+  @IsNumberOrPercentage()
+  height: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
   duration: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
   nextLoop: number;
 
+  @IsNotEmpty()
   @IsIn(EnterAnimationValues)
   enterAnimation: string;
 
+  @IsNotEmpty()
   @IsIn(LeaveAnimationValues)
   leaveAnimation: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsISO8601({ strict: true })
   startDateTime: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsISO8601({ strict: true })
   endDateTime: string;
-
-  @IsOptional()
-  client: CreateClientDto;
-
-  @IsOptional()
-  devices: CreateDeviceDto[];
 }

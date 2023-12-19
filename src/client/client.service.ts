@@ -96,11 +96,12 @@ export class ClientService {
       throw new NotFoundException("No Clients Were Found");
     return clients;
   }
-  async findByid(id: string) {
+  async findByid(id: string, join?: string[]) {
     if (!id) throw new BadRequestException("Missing Parameter id");
 
     const [client, error] = await this.CleanPromise.Do(
       this.ClientRepository.findOne({
+        relations: join || undefined,
         select: {
           id: true,
           email: true,
@@ -121,7 +122,7 @@ export class ClientService {
     );
     if (error)
       throw new InternalServerErrorException(
-        "The Given Id is Not Of The Type Uniqueidentifier"
+        "Couldn't Get The Client, Please Check The Client Id"
       );
     if (!client)
       throw new NotFoundException("No Client Found With The Given Id");
