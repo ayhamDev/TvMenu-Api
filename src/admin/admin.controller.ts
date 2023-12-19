@@ -14,6 +14,7 @@ import { AdminService } from "./admin.service";
 import { AdminDto } from "./dto/admin.dto";
 import { AdminDeleteManyDto } from "./dto/admin-DeleteMany.dto";
 import { PatchPasswordDto } from "src/auth/dto/PatchPassword.dto";
+import { uuidDto } from "src/dto/UUID.dto";
 
 @Controller("admin")
 @UseGuards(AuthGuard)
@@ -34,17 +35,20 @@ export class AdminController {
 
   @Get(":id")
   @Role("Admin")
-  GetAdminById(@Param("id") id: string) {
-    return this.AdminService.findById(id);
+  GetAdminById(@Param() params: uuidDto) {
+    return this.AdminService.findById(params.id);
   }
 
   @Patch(":id")
   @Role("Admin")
   PatchAdminPassword(
-    @Param("id") id: string,
+    @Param() params: uuidDto,
     @Body() PatchPasswordDto: PatchPasswordDto
   ) {
-    return this.AdminService.PatchPassword(id, PatchPasswordDto.password);
+    return this.AdminService.PatchPassword(
+      params.id,
+      PatchPasswordDto.password
+    );
   }
   @Delete("bulk")
   @Role("Admin")
@@ -53,7 +57,7 @@ export class AdminController {
   }
   @Delete(":id")
   @Role("Admin")
-  DeleteAdmin(@Param("id") id: string) {
-    return this.AdminService.DeleteAdmin(id);
+  DeleteAdmin(@Param() params: uuidDto) {
+    return this.AdminService.DeleteAdmin(params.id);
   }
 }

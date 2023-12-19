@@ -13,6 +13,7 @@ import { User } from "src/auth/user/user.decorator";
 import { UnregisteredService } from "./unregistered.service";
 import { AddUnregisteredDeviceDto } from "./dto/device-add-unregistered.dto";
 import { UpdateUnregisteredDeviceDto } from "./dto/device-update-unregistered.dto";
+import { uuidDto } from "src/dto/UUID.dto";
 
 @Controller("unregistered")
 @UseGuards(AuthGuard)

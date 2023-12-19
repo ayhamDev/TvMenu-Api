@@ -14,6 +14,7 @@ import { Role } from "src/auth/role/role.decorator";
 import { CreateDeviceDto } from "./dto/create-device.dto";
 import { DeviceDeleteManyDto } from "./dto/device-deletemany.dto";
 import { UpdateDeviceDto, UpdateManyDevicesDto } from "./dto/update-device.dto";
+import { uuidDto } from "src/dto/UUID.dto";
 
 @Controller("device")
 @UseGuards(AuthGuard)

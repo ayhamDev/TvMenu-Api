@@ -17,6 +17,7 @@ import { ClientService } from "./client.service";
 import { ClientDeleteManyDto } from "./dto/client-deletemany.dto";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
+import { uuidDto } from "src/dto/UUID.dto";
 
 @Controller("client")
 @UseGuards(AuthGuard)
@@ -36,36 +37,39 @@ export class ClientController {
 
   @Get(":id")
   @Role("Admin")
-  GetClientById(@Param("id") id: string) {
-    return this.clientService.findByid(id);
+  GetClientById(@Param() params: uuidDto) {
+    return this.clientService.findByid(params.id);
   }
 
   @Patch(":id")
   @Role("Admin")
   PatchClientData(
-    @Param("id") id: string,
+    @Param() params: uuidDto,
     @Body() UpdateClientDto: UpdateClientDto
   ) {
-    return this.clientService.PatchData(id, UpdateClientDto);
+    return this.clientService.PatchData(params.id, UpdateClientDto);
   }
 
   @Patch(":id/password")
   @Role("Admin")
   Admin__PatchClientPassword(
-    @Param("id") id: string,
+    @Param() params: uuidDto,
     @Body() PatchPasswordDto: PatchPasswordDto
   ) {
-    return this.clientService.PatchPassword(id, PatchPasswordDto.password);
+    return this.clientService.PatchPassword(
+      params.id,
+      PatchPasswordDto.password
+    );
   }
 
   @Patch(":id/password")
   @Role("Client")
   Client__PatchClientPassword(
-    @Param("id") id: string,
+    @Param() params: uuidDto,
     @User() user,
     @Body() PatchPasswordDto: PatchPasswordDto
   ) {
-    if (user.Role == "Client" && id === user.id)
+    if (user.Role == "Client" && params.id === user.id)
       return this.clientService.PatchPassword(
         user.id,
         PatchPasswordDto.password
@@ -81,7 +85,7 @@ export class ClientController {
   }
   @Delete(":id")
   @Role("Admin")
-  DeleteClient(@Param("id") id: string) {
-    return this.clientService.DeleteClient(id);
+  DeleteClient(@Param() params: uuidDto) {
+    return this.clientService.DeleteClient(params.id);
   }
 }
