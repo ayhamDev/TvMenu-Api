@@ -144,15 +144,25 @@ export class AdminService implements OnModuleInit {
     };
   }
   async DeleteManyAdmins(ids: string[]) {
-    const [DeletedAdmins, error] = await this.CleanPromise.Do(
-      this.AdminRepository.delete([...ids])
+    const [admins, error] = await this.CleanPromise.Do(
+      this.AdminRepository.createQueryBuilder().whereInIds(ids).getMany()
     );
 
     if (error)
+      throw new InternalServerErrorException(
+        "Couldn't Verify Admins, Plase Check The Client Ids"
+      );
+    if (admins.length !== ids.length)
+      throw new NotFoundException("Some Or All Admins Were Not Found");
+    const [DeletedAdmins, DeletingError] = await this.CleanPromise.Do(
+      this.AdminRepository.remove([...admins])
+    );
+
+    if (DeletingError)
       throw new InternalServerErrorException("Couldn't Delete the Admins");
-    if (DeletedAdmins && !DeletedAdmins.affected)
+    if (DeletedAdmins && DeletedAdmins.length === 0)
       throw new NotFoundException(
-        "No Admins Found With The Given Id To Delete"
+        "No Admins Found With The Given Ids To Delete"
       );
     return {
       Message: "The Admins Were Deleted Successfully",

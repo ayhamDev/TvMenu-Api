@@ -174,14 +174,13 @@ export class ClientService {
     const [clients, ClientErrors] = await this.CleanPromise.Do(
       this.ClientRepository.createQueryBuilder().whereInIds(ids).getMany()
     );
-    console.log(clients.length);
 
     if (ClientErrors)
       throw new InternalServerErrorException(
         "Couldn't Verify Clients, Plase Check The Client Ids"
       );
     if (clients.length !== ids.length)
-      throw new NotFoundException("Some Or All Client Where Not Found");
+      throw new NotFoundException("Some Or All Client Were Not Found");
 
     const [DeletedClients, error] = await this.CleanPromise.Do(
       this.ClientRepository.remove([...clients])

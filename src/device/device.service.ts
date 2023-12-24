@@ -123,14 +123,23 @@ export class DeviceService {
     };
   }
   async DeleteManyById(ids: string[]) {
-    const [DeletedDevices, error] = await this.CleanPromise.Do(
-      this.DeviceRepository.delete([...ids])
+    const [devices, error] = await this.CleanPromise.Do(
+      this.DeviceRepository.createQueryBuilder().whereInIds(ids).getMany()
     );
     if (error)
-      throw new InternalServerErrorException("Couldn't Delete The Device");
-    if (DeletedDevices && !DeletedDevices.affected)
+      throw new InternalServerErrorException(
+        "Couldn't Verify Devices, Plase Check The Client Ids"
+      );
+    if (devices.length !== ids.length)
+      throw new NotFoundException("Some Or All Devices Were Not Found");
+    const [DeletedDevices, DeletingError] = await this.CleanPromise.Do(
+      this.DeviceRepository.remove([...devices])
+    );
+    if (DeletingError)
+      throw new InternalServerErrorException("Couldn't Delete The Devices");
+    if (DeletedDevices && DeletedDevices.length == 0)
       throw new NotFoundException(
-        "No Device Found With The Given Id To Delete"
+        "No Device Found With The Given Ids To Delete"
       );
     return {
       Message: "Devices Were Deleted Successfully",

@@ -148,16 +148,24 @@ export class ProgramService {
     };
   }
   async DeleteManyById(ids: string[]) {
-    console.log(ids);
-
-    const [DeletedPrograms, error] = await this.CleanPromise.Do(
-      this.programRepository.delete([...ids])
+    const [programs, error] = await this.CleanPromise.Do(
+      this.programRepository.createQueryBuilder().whereInIds(ids).getMany()
     );
     if (error)
       throw new InternalServerErrorException(
+        "Couldn't Verify Programs, Plase Check The Programs Ids"
+      );
+    if (programs.length !== ids.length)
+      throw new NotFoundException("Some Or All Programs Were Not Found");
+
+    const [DeletedPrograms, DeletingError] = await this.CleanPromise.Do(
+      this.programRepository.remove([...programs])
+    );
+    if (DeletingError)
+      throw new InternalServerErrorException(
         "Couldn't Delete The Programs, Please Check The Ids"
       );
-    if (!DeletedPrograms.affected)
+    if (DeletedPrograms && DeletedPrograms.length === 0)
       throw new NotFoundException(
         "No Program Found With The Given Id To Delete"
       );
