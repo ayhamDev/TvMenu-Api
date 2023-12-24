@@ -42,8 +42,6 @@ export class Device {
   lastOnline: Date;
 
   @ManyToOne(() => Client, (client) => client.devices, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
     nullable: false,
   })
   @JoinColumn({ name: "clientId" })

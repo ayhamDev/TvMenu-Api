@@ -9,9 +9,11 @@ import { AuthService } from "src/auth/auth.service";
 import { AdminService } from "src/admin/admin.service";
 import { AdminModule } from "src/admin/admin.module";
 import { Admin } from "src/admin/entities/admin.entity";
+import { Device } from "src/device/entities/device.entity";
+import { Program } from "src/program/entities/program.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Client, Admin])],
+  imports: [TypeOrmModule.forFeature([Client, Device, Program, Admin])],
   controllers: [ClientController],
   providers: [
     ClientService,

@@ -18,6 +18,7 @@ import { ProgramDeleteManyDto } from "./dto/progran-deletemany.dto";
 import { UpdateProgramDto } from "./dto/update-program.dto";
 import { UUID } from "crypto";
 import { uuidDto } from "src/dto/UUID.dto";
+import { UpdateManyProgramDto } from "./dto/update-many-program.dto";
 
 @Controller("program")
 @UseGuards(AuthGuard)
@@ -42,9 +43,14 @@ export class ProgramController {
     return this.programService.Create(CreateProgramDto);
   }
 
-  @Put("/:id")
+  @Patch("/bulk")
   @Role("Admin")
-  PatchProgramById(@Param() params: uuidDto, @Body() data: CreateProgramDto) {
+  PatchManyProgramsById(@Body() data: UpdateManyProgramDto) {
+    return this.programService.PatchManyById(data);
+  }
+  @Patch("/:id")
+  @Role("Admin")
+  PatchProgramById(@Param() params: uuidDto, @Body() data: UpdateProgramDto) {
     return this.programService.PatchById(params.id, data);
   }
 

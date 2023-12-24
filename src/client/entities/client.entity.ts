@@ -43,7 +43,6 @@ export class Client {
 
   @OneToMany(() => Device, (device) => device.client, {
     nullable: true,
-    cascade: true,
   })
   devices: Device[];
 
@@ -55,8 +54,6 @@ export class Client {
 
   @OneToMany(() => Program, (program) => program.client, {
     nullable: true,
-
-    cascade: true,
   })
   programs: Program[];
 

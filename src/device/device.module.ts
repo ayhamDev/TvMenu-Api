@@ -12,9 +12,12 @@ import { HashPasswordService } from "src/auth/hash-password/hash-password.servic
 import { Device } from "./entities/device.entity";
 import { UnregisteredService } from "src/unregistered/unregistered.service";
 import { Unregistered } from "src/unregistered/entities/unregistered.entity";
+import { Program } from "src/program/entities/program.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, Unregistered, Admin, Client])],
+  imports: [
+    TypeOrmModule.forFeature([Device, Unregistered, Program, Admin, Client]),
+  ],
   controllers: [DeviceController],
   providers: [
     DeviceService,

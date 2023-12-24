@@ -7,11 +7,12 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Program } from "./entities/program.entity";
-import { CreateProgramDto } from "./dto/create-program.dto";
 import { ClientService } from "src/client/client.service";
+import { Repository } from "typeorm";
+import { CreateProgramDto } from "./dto/create-program.dto";
+import { UpdateManyProgramDto } from "./dto/update-many-program.dto";
 import { UpdateProgramDto } from "./dto/update-program.dto";
+import { Program } from "./entities/program.entity";
 
 @Injectable()
 export class ProgramService {
@@ -53,7 +54,7 @@ export class ProgramService {
 
     if (!ValidDevices)
       throw new BadRequestException(
-        "Some Or All Devices Were Not Found For The This Client"
+        "Some Or All Devices Dont Belongs To This Client"
       );
     const devices = client.devices.filter((device) =>
       CreateProgramDto.deviceIds.includes(device.id)
@@ -75,13 +76,34 @@ export class ProgramService {
       statusCode: HttpStatus.CREATED,
     };
   }
-  async PatchById(id: string, data: CreateProgramDto) {
+  async PatchManyById(UpdateManyProgramDto: UpdateManyProgramDto) {
+    const { ids, ...data } = UpdateManyProgramDto;
+    const [PatchedPrograms, error] = await this.CleanPromise.Do(
+      this.programRepository
+        .createQueryBuilder()
+        .whereInIds(ids)
+        .update(Program)
+        .set(data)
+        .execute()
+    );
+
+    if (error)
+      throw new InternalServerErrorException("Couldn't Update Programs");
+    if (PatchedPrograms.affected != ids.length)
+      throw new NotFoundException("Some or All Programs Were Not Found");
+    return {
+      message: "Programs Update Successfully",
+      statusCode: 200,
+    };
+  }
+  async PatchById(id: string, UpdateProgramDto: UpdateProgramDto) {
     const program = await this.findById(id);
 
-    const client = await this.clientService.findByid(data.clientId, [
-      "devices",
-    ]);
-    const ValidDevices = data.deviceIds.every((requestId) =>
+    const client = await this.clientService.findByid(
+      UpdateProgramDto.clientId,
+      ["devices"]
+    );
+    const ValidDevices = UpdateProgramDto.deviceIds.every((requestId) =>
       client.devices.some((device) => device.id === requestId)
     );
     if (!ValidDevices)
@@ -89,28 +111,16 @@ export class ProgramService {
         "Some Or All Devices Were Not Found For The This Client"
       );
     const devices = client.devices.filter((device) =>
-      data.deviceIds.includes(device.id)
+      UpdateProgramDto.deviceIds.includes(device.id)
     );
     program.client = client;
     program.devices = devices;
-
-    program.name = data.name;
-    program.description = data.description;
-    program.duration = data.duration;
-    program.nextLoop = data.nextLoop;
-    program.endDateTime = data.endDateTime;
-    program.startDateTime = data.startDateTime;
-    program.enterAnimation = data.enterAnimation;
-    program.leaveAnimation = data.leaveAnimation;
-    program.width = data.width;
-    program.height = data.height;
-    program.x = data.x;
-    program.y = data.y;
-    program.type = data.type;
-    program.status = data.status;
-    program.videoUrl = data.videoUrl;
-    program.webUrl = data.webUrl;
-    program.imageUrl = data.imageUrl;
+    const { clientId, deviceIds, ...PatchData } = UpdateProgramDto;
+    for (const key in PatchData) {
+      if (Object.prototype.hasOwnProperty.call(PatchData, key)) {
+        program[key] = PatchData[key];
+      }
+    }
     const [UpdatedProgram, error] = await this.CleanPromise.Do(
       this.programRepository.save(program)
     );

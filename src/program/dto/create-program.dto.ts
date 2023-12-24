@@ -20,9 +20,8 @@ export class CreateProgramDto {
   @IsString()
   clientId: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsArray()
-  @ArrayNotEmpty()
   @IsString({ each: true })
   deviceIds: string[];
 
@@ -37,6 +36,7 @@ export class CreateProgramDto {
   @IsNumber()
   layerNumber: number;
 
+  @IsNotEmpty()
   @IsIn([1, 2, 3])
   type: number;
 

@@ -11,9 +11,12 @@ import { AuthService } from "src/auth/auth.service";
 import { AdminService } from "src/admin/admin.service";
 import { Admin } from "src/admin/entities/admin.entity";
 import { Device } from "src/device/entities/device.entity";
+import { Program } from "src/program/entities/program.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Unregistered, Device, Admin, Client])],
+  imports: [
+    TypeOrmModule.forFeature([Unregistered, Program, Device, Admin, Client]),
+  ],
   providers: [
     UnregisteredService,
     AuthService,

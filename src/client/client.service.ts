@@ -11,17 +11,24 @@ import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { AuthDto } from "src/auth/dto/auth.dto";
 import { HashPasswordService } from "src/auth/hash-password/hash-password.service";
-import { EntityNotFoundError, Repository, In } from "typeorm";
+import { EntityNotFoundError, Repository, In, DataSource } from "typeorm";
 import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 import { Client } from "./entities/client.entity";
+import { DeviceService } from "src/device/device.service";
+import { Device } from "src/device/entities/device.entity";
+import { Program } from "src/program/entities/program.entity";
 
 @Injectable()
 export class ClientService {
   constructor(
     @InjectRepository(Client) private ClientRepository: Repository<Client>,
+    @InjectRepository(Device) private DeviceRepository: Repository<Device>,
+    @InjectRepository(Program) private ProgramRepository: Repository<Program>,
+
     private readonly CleanPromise: CleanPromiseService,
-    private readonly HashPassword: HashPasswordService
+    private readonly HashPassword: HashPasswordService,
+    private readonly DataSource: DataSource
   ) {}
 
   async Register(ClientDto: CreateClientDto) {
@@ -192,21 +199,51 @@ export class ClientService {
   }
   async DeleteClient(id: string) {
     const client = await this.findByid(id);
+    const QueryRunner = this.DataSource.createQueryRunner();
+    await QueryRunner.connect();
+    await QueryRunner.startTransaction();
+    try {
+      const devices = await QueryRunner.manager.find(Device, {
+        where: {
+          clientId: id,
+        },
+      });
+      const programs = await QueryRunner.manager.find(Program, {
+        where: {
+          clientId: id,
+        },
+      });
 
-    const [DeletedClient, error] = await this.CleanPromise.Do(
-      this.ClientRepository.remove(client)
-    );
-    if (error)
-      throw new InternalServerErrorException("Couldn't Delete the Clients");
-    if (!DeletedClient)
-      throw new NotFoundException(
-        "No Client Found With The Given Id To Delete"
-      );
+      await QueryRunner.manager.remove(devices);
+      await QueryRunner.manager.remove(programs);
+      await QueryRunner.manager.remove(client);
+      await QueryRunner.commitTransaction();
+      return {
+        message: "Client Was Deleted Successfull",
+        statusCode: 201,
+      };
+    } catch (err) {
+      console.log(err);
 
-    return {
-      Message: "The Client Was Deleted Successfully",
-      StatusCode: 204,
-      data: DeletedClient,
-    };
+      await QueryRunner.rollbackTransaction();
+      throw new InternalServerErrorException("Couldn't Delete The Client");
+    } finally {
+      QueryRunner.release();
+    }
+    // const [DeletedClient, error] = await this.CleanPromise.Do(
+    //   this.ClientRepository.remove(client)
+    // );
+    // if (error)
+    //   throw new InternalServerErrorException("Couldn't Delete the Clients");
+    // if (!DeletedClient)
+    //   throw new NotFoundException(
+    //     "No Client Found With The Given Id To Delete"
+    //   );
+
+    // return {
+    //   Message: "The Client Was Deleted Successfully",
+    //   StatusCode: 204,
+    //   data: DeletedClient,
+    // };
   }
 }

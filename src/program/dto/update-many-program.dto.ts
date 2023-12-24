@@ -13,15 +13,12 @@ import { EnterAnimationValues } from "../interface/enter-animation.interface";
 import { LeaveAnimationValues } from "../interface/leave-animation.interface";
 import { IsNumberOrPercentage } from "../is-number-or-percentage/is-number-or-percentage.decorator";
 
-export class UpdateProgramDto {
+export class UpdateManyProgramDto {
   @IsNotEmpty()
-  @IsString()
-  clientId: string;
-
-  @IsOptional()
   @IsArray()
+  @ArrayNotEmpty()
   @IsString({ each: true })
-  deviceIds: string[];
+  ids: string[];
 
   @IsOptional()
   @IsString()
@@ -34,6 +31,7 @@ export class UpdateProgramDto {
   @IsNumber()
   layerNumber: number;
 
+  @IsOptional()
   @IsIn([1, 2, 3])
   type: number;
 

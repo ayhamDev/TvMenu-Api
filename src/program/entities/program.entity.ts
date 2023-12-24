@@ -92,7 +92,9 @@ export class Program {
   })
   devices: Device[];
 
-  @ManyToOne(() => Client, (client) => client.programs, { nullable: false })
+  @ManyToOne(() => Client, (client) => client.programs, {
+    nullable: false,
+  })
   @JoinColumn({ name: "clientId" })
   client: Client;
 }
