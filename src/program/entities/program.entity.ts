@@ -1,5 +1,5 @@
-import { Client } from "src/client/entities/client.entity";
-import { Device } from "src/device/entities/device.entity";
+import { Client } from "../../client/entities/client.entity";
+import { Device } from "../../device/entities/device.entity";
 import {
   Column,
   CreateDateColumn,

@@ -13,6 +13,7 @@ import { Device } from "./entities/device.entity";
 import { UnregisteredService } from "src/unregistered/unregistered.service";
 import { Unregistered } from "src/unregistered/entities/unregistered.entity";
 import { Program } from "src/program/entities/program.entity";
+import { DeviceGateway } from "./device.gateway";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { Program } from "src/program/entities/program.entity";
     ClientService,
     HashPasswordService,
     CleanPromiseService,
+    DeviceGateway,
   ],
 })
 export class DeviceModule {}

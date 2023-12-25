@@ -1,6 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
+import { AdminService } from "./admin/admin.service";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,8 @@ async function bootstrap() {
     })
   );
   app.enableCors();
+  const Admin = app.get(AdminService);
   await app.listen(3000);
+  await Admin.DefualtAdmin();
 }
 bootstrap();

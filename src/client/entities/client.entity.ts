@@ -1,6 +1,6 @@
-import { Device } from "src/device/entities/device.entity";
-import { Program } from "src/program/entities/program.entity";
-import { Unregistered } from "src/unregistered/entities/unregistered.entity";
+import { Device } from "../../device/entities/device.entity";
+import { Program } from "../../program/entities/program.entity";
+import { Unregistered } from "../../unregistered/entities/unregistered.entity";
 import {
   CreateDateColumn,
   Entity,

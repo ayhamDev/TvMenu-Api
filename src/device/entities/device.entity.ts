@@ -1,10 +1,9 @@
-import { Client } from "src/client/entities/client.entity";
-import { Program } from "src/program/entities/program.entity";
+import { Client } from "../../client/entities/client.entity";
+import { Program } from "../../program/entities/program.entity";
 import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToMany,
   ManyToOne,

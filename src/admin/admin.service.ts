@@ -18,13 +18,13 @@ import { HashPasswordService } from "src/auth/hash-password/hash-password.servic
 import { AuthDto } from "src/auth/dto/auth.dto";
 
 @Injectable()
-export class AdminService implements OnModuleInit {
+export class AdminService {
   constructor(
     @InjectRepository(Admin) private AdminRepository: Repository<Admin>,
     private readonly CleanPromise: CleanPromiseService,
     private readonly HashPassword: HashPasswordService
   ) {}
-  async onModuleInit() {
+  async DefualtAdmin() {
     const [Admin, Error] = await this.CleanPromise.Do(
       this.AdminRepository.find({
         take: 1,

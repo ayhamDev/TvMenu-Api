@@ -1,21 +1,21 @@
+import { CleanPromiseModule } from "@CleanPromise/clean-promise";
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AdminModule } from "./admin/admin.module";
 import { Admin } from "./admin/entities/admin.entity";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { AuthModule } from "./auth/auth.module";
 import { ClientModule } from "./client/client.module";
 import { Client } from "./client/entities/client.entity";
 import { DeviceModule } from "./device/device.module";
 import { Device } from "./device/entities/device.entity";
-import { ProgramModule } from "./program/program.module";
 import { Program } from "./program/entities/program.entity";
-import { UnregisteredModule } from "./unregistered/unregistered.module";
+import { ProgramModule } from "./program/program.module";
 import { Unregistered } from "./unregistered/entities/unregistered.entity";
-import { CleanPromiseModule } from "@CleanPromise/clean-promise";
-import { AuthModule } from "./auth/auth.module";
-import { JwtModule } from "@nestjs/jwt";
+import { UnregisteredModule } from "./unregistered/unregistered.module";
 
 @Module({
   imports: [
@@ -38,7 +38,7 @@ import { JwtModule } from "@nestjs/jwt";
           ConfigService.get<string>("NODE_ENV") != "production" ? true : false,
         synchronize:
           ConfigService.get<string>("NODE_ENV") != "production" ? true : false,
-        entities: [Admin, Client, Device, Program, Unregistered],
+        autoLoadEntities: true,
       }),
       inject: [ConfigService],
     }),
